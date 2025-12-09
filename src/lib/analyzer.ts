@@ -38,29 +38,120 @@ const calculateStreak = (dates: Date[]): { days: number; startDate: string; endD
 };
 
 const determinePersonalityType = (analytics: any): string => {
-  const { nightOwlScore, totalUserMessages, questionToStatementRatio, topTopics } = analytics;
+  const { nightOwlScore, totalUserMessages, questionToStatementRatio, topTopics, codeBlockCount, avgSessionLength, conversationDepth, weekendVsWeekday } = analytics;
   
-  if (nightOwlScore > totalUserMessages * 0.3) return "Night Owl Thinker";
-  if (questionToStatementRatio > 0.7) return "Curious Explorer";
-  if (topTopics.some((t: any) => ['code', 'debug', 'error', 'function'].includes(t.topic))) return "Code Warrior";
-  if (totalUserMessages > 1000) return "Power User";
+  const topWords = topTopics.slice(0, 15).map((t: any) => t.topic);
+  const codeWords = ['code', 'debug', 'error', 'function', 'typescript', 'javascript', 'python', 'react', 'component', 'syntax'];
+  const designWords = ['design', 'color', 'layout', 'style', 'interface', 'creative', 'visual'];
+  const dataWords = ['data', 'analysis', 'chart', 'graph', 'database', 'query', 'model'];
+  const writingWords = ['write', 'content', 'article', 'story', 'blog', 'copy', 'draft'];
+  const businessWords = ['business', 'strategy', 'marketing', 'sales', 'growth', 'revenue'];
+  const learningWords = ['learn', 'tutorial', 'understand', 'explain', 'teach', 'guide'];
+  
+  const codeScore = topWords.filter((w: string) => codeWords.includes(w)).length;
+  const designScore = topWords.filter((w: string) => designWords.includes(w)).length;
+  const dataScore = topWords.filter((w: string) => dataWords.includes(w)).length;
+  const writingScore = topWords.filter((w: string) => writingWords.includes(w)).length;
+  const businessScore = topWords.filter((w: string) => businessWords.includes(w)).length;
+  const learningScore = topWords.filter((w: string) => learningWords.includes(w)).length;
+  
+  // Night owl behavior
+  if (nightOwlScore > totalUserMessages * 0.4) return "Midnight Maverick";
+  if (nightOwlScore > totalUserMessages * 0.25) return "Night Owl Thinker";
+  
+  // Weekend warrior
+  if (weekendVsWeekday && weekendVsWeekday.weekend > weekendVsWeekday.weekday * 0.6) return "Weekend Warrior";
+  
+  // Code-focused
+  if (codeBlockCount > totalUserMessages * 0.5 && codeScore >= 3) return "Code Ninja";
+  if (codeScore >= 4 || (codeBlockCount > totalUserMessages * 0.3)) return "Code Warrior";
+  if (codeScore >= 2 && dataScore >= 2) return "Tech Architect";
+  
+  // Data & Analytics
+  if (dataScore >= 3) return "Data Whisperer";
+  
+  // Creative & Design
+  if (designScore >= 3) return "Creative Visionary";
+  if (writingScore >= 3) return "Content Craftsman";
+  
+  // Business focused
+  if (businessScore >= 3) return "Strategic Thinker";
+  
+  // Question/Learning patterns
+  if (questionToStatementRatio > 0.75) return "Curious Explorer";
+  if (questionToStatementRatio > 0.6 && learningScore >= 2) return "Knowledge Seeker";
+  if (learningScore >= 3) return "Lifelong Learner";
+  
+  // Session patterns
+  if (avgSessionLength > 5) return "Deep Diver";
+  if (avgSessionLength > 3 && conversationDepth > 20) return "Marathon Thinker";
+  
+  // Volume-based
+  if (totalUserMessages > 2000) return "Power User";
+  if (totalUserMessages > 1000) return "Dedicated Collaborator";
+  if (totalUserMessages > 500 && conversationDepth > 15) return "Engaged Partner";
+  
+  // Balanced approach
+  if (conversationDepth > 25) return "Thorough Analyst";
+  if (questionToStatementRatio > 0.4 && questionToStatementRatio < 0.6) return "Balanced Thinker";
+  
   return "Thoughtful Learner";
 };
 
 const determineDominantTheme = (topTopics: Array<{ topic: string; count: number }>): string => {
-  const techWords = ['code', 'api', 'function', 'error', 'debug', 'typescript', 'javascript', 'python', 'react'];
-  const creativeWords = ['design', 'create', 'idea', 'story', 'write', 'content'];
-  const learningWords = ['learn', 'understand', 'explain', 'help', 'tutorial', 'guide'];
+  const techWords = ['code', 'api', 'function', 'error', 'debug', 'typescript', 'javascript', 'python', 'react', 'component', 'syntax', 'backend', 'frontend', 'server'];
+  const creativeWords = ['design', 'create', 'idea', 'story', 'write', 'content', 'creative', 'visual', 'artistic', 'inspiration'];
+  const learningWords = ['learn', 'understand', 'explain', 'help', 'tutorial', 'guide', 'study', 'research', 'knowledge'];
+  const dataWords = ['data', 'analysis', 'analytics', 'chart', 'visualization', 'statistics', 'metrics', 'insights', 'database', 'query'];
+  const businessWords = ['business', 'strategy', 'marketing', 'sales', 'revenue', 'growth', 'customer', 'product', 'market'];
+  const aiWords = ['model', 'training', 'machine', 'neural', 'chatgpt', 'openai', 'prompt', 'generation', 'intelligence'];
+  const webWords = ['website', 'nextjs', 'tailwind', 'responsive', 'deploy', 'vercel', 'hosting', 'domain'];
+  const mobileWords = ['mobile', 'android', 'ios', 'flutter', 'native', 'app'];
+  const devopsWords = ['docker', 'kubernetes', 'deploy', 'cicd', 'pipeline', 'cloud', 'aws', 'azure'];
+  const securityWords = ['security', 'authentication', 'encryption', 'vulnerability', 'token', 'auth'];
+  const mathWords = ['algorithm', 'optimization', 'complexity', 'performance', 'efficiency', 'computation'];
+  const writingWords = ['article', 'blog', 'writing', 'copy', 'content', 'documentation', 'readme'];
   
-  const topWords = topTopics.slice(0, 10).map(t => t.topic);
+  const topWords = topTopics.slice(0, 15).map(t => t.topic);
+  const topCounts = topTopics.slice(0, 15).reduce((sum, t) => sum + t.count, 0);
   
-  const techScore = topWords.filter(w => techWords.includes(w)).length;
-  const creativeScore = topWords.filter(w => creativeWords.includes(w)).length;
-  const learningScore = topWords.filter(w => learningWords.includes(w)).length;
+  const calculateScore = (words: string[]) => {
+    const matches = topTopics.filter(t => words.includes(t.topic)).slice(0, 15);
+    const count = matches.reduce((sum, t) => sum + t.count, 0);
+    return topCounts > 0 ? (count / topCounts) * matches.length : 0;
+  };
   
-  if (techScore > creativeScore && techScore > learningScore) return "Technical Development";
-  if (creativeScore > learningScore) return "Creative Projects";
-  return "Knowledge & Learning";
+  const scores = {
+    tech: calculateScore(techWords),
+    creative: calculateScore(creativeWords),
+    learning: calculateScore(learningWords),
+    data: calculateScore(dataWords),
+    business: calculateScore(businessWords),
+    ai: calculateScore(aiWords),
+    web: calculateScore(webWords),
+    mobile: calculateScore(mobileWords),
+    devops: calculateScore(devopsWords),
+    security: calculateScore(securityWords),
+    math: calculateScore(mathWords),
+    writing: calculateScore(writingWords)
+  };
+  
+  const maxScore = Math.max(...Object.values(scores));
+  
+  if (scores.ai === maxScore && scores.ai > 0) return "AI & Machine Learning";
+  if (scores.data === maxScore && scores.data > 0) return "Data Science & Analytics";
+  if (scores.web === maxScore && scores.web > 0) return "Web Development";
+  if (scores.mobile === maxScore && scores.mobile > 0) return "Mobile Development";
+  if (scores.devops === maxScore && scores.devops > 0) return "DevOps & Infrastructure";
+  if (scores.security === maxScore && scores.security > 0) return "Security & Authentication";
+  if (scores.tech === maxScore && scores.tech > 0) return "Technical Development";
+  if (scores.business === maxScore && scores.business > 0) return "Business & Strategy";
+  if (scores.creative === maxScore && scores.creative > 0) return "Creative Projects";
+  if (scores.writing === maxScore && scores.writing > 0) return "Content & Writing";
+  if (scores.math === maxScore && scores.math > 0) return "Algorithms & Optimization";
+  if (scores.learning === maxScore && scores.learning > 0) return "Knowledge & Learning";
+  
+  return "General Exploration";
 };
 
 export const analyzeConversations = (conversations: Conversation[]): WrapAnalytics => {
@@ -270,7 +361,11 @@ export const analyzeConversations = (conversations: Conversation[]): WrapAnalyti
     totalUserMessages,
     nightOwlScore: nightOwlCount,
     questionToStatementRatio,
-    topTopics
+    topTopics,
+    codeBlockCount,
+    avgSessionLength,
+    conversationDepth,
+    weekendVsWeekday: { weekend: weekendCount, weekday: weekdayCount }
   };
   
   const personalityType = determinePersonalityType(tempAnalytics);
