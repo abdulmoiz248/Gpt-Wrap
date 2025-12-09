@@ -265,7 +265,7 @@ export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
                   document.body.removeChild(clone);
                   
                   const link = document.createElement('a');
-                  link.download = `gpt-rewind-2025.png`;
+                  link.download = `gpt-wrap-2025.png`;
                   link.href = canvas.toDataURL('image/png');
                   link.click();
                 } catch (error) {
@@ -365,88 +365,95 @@ export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
     {/* Hidden share card for download */}
     <div id="share-card-hidden" style={{ display: 'none', position: 'absolute', left: '-9999px', top: '0' }}>
       <div 
-        style={{ width: '800px', minHeight: '1100px', background: 'linear-gradient(to bottom right, #d4acfb, #000000, #b84fce)', padding: '32px', borderRadius: '24px', border: '1px solid rgba(168, 85, 247, 0.3)' }}
+        style={{ 
+          width: '800px', 
+          minHeight: '1100px', 
+          background: 'linear-gradient(135deg, #581c87 0%, #7e22ce 50%, #be185d 100%)',
+          padding: '48px',
+          borderRadius: '24px',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', color: 'white', fontFamily: 'var(--font-poppins), sans-serif' }}>
-          <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <h1 style={{ fontSize: '48px', fontWeight: 'bold', background: 'linear-gradient(to right, #c084fc, #f9a8d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
-              GPT Rewind 2025
+        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '24px', color: 'white', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+          {/* Header */}
+          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+            <h1 style={{ 
+              fontSize: '72px', 
+              fontWeight: '900', 
+              color: 'white',
+              margin: 0,
+              letterSpacing: '-0.02em'
+            }}>
+              GPT Wrap
             </h1>
-            <p style={{ fontSize: '18px', color: '#d8b4fe', margin: 0 }}>My ChatGPT Year Wrapped</p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '32px' }}>
-            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '16px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#c084fc' }}>{analytics.totalConversations.toLocaleString()}</div>
-              <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>Conversations</div>
-            </div>
-
-            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '16px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#f9a8d4' }}>{analytics.totalUserMessages.toLocaleString()}</div>
-              <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>Messages Sent</div>
-            </div>
-
-            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '16px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#c084fc' }}>{analytics.longestStreak.days} 🔥</div>
-              <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>Day Streak</div>
-            </div>
-
-            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '16px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#f9a8d4' }}>{analytics.conversationDepth}</div>
-              <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>Avg Depth</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '16px' }}>
+              <div style={{ height: '1px', width: '48px', background: 'linear-gradient(to right, transparent, rgba(168, 85, 247, 0.6))' }}></div>
+              <p style={{ fontSize: '20px', color: '#e9d5ff', margin: 0, fontWeight: '300' }}>2025 Year in Review</p>
+              <div style={{ height: '1px', width: '48px', background: 'linear-gradient(to left, transparent, rgba(168, 85, 247, 0.6))' }}></div>
             </div>
           </div>
 
-          <div style={{ background: 'rgba(147, 51, 234, 0.2)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)', marginTop: '24px' }}>
-            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ fontSize: '16px', color: 'rgba(255, 255, 255, 0.7)' }}>I&apos;m a</div>
-              <div style={{ fontSize: '32px', fontWeight: 'bold', color: 'white' }}>{analytics.personalityType}</div>
-              <div style={{ fontSize: '16px', color: '#d8b4fe', marginTop: '12px' }}>{analytics.dominantTheme}</div>
-            </div>
-          </div>
-
-          <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '16px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-            <div style={{ fontSize: '18px', fontWeight: 'bold', color: 'white', marginBottom: '12px' }}>Top Topics</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {analytics.topTopics.slice(0, 5).map((topic, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.9)' }}>#{i + 1} {topic.topic}</span>
-                  <span style={{ color: '#c084fc', fontWeight: '600', fontSize: '14px' }}>{topic.count}x</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
-            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '12px', textAlign: 'center' }}>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#c084fc' }}>{analytics.mostActiveDay}</div>
-              <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.7)' }}>Peak Day</div>
-            </div>
-            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '12px', textAlign: 'center' }}>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#f9a8d4' }}>{analytics.mostActiveHour}:00</div>
-              <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.7)' }}>Power Hour</div>
-            </div>
-            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '12px', textAlign: 'center' }}>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#c084fc' }}>{analytics.questionToStatementRatio}%</div>
-              <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.7)' }}>Questions</div>
-            </div>
-          </div>
-
-          {analytics.codeBlockCount > 0 && (
-            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '16px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#c084fc' }}>{analytics.codeBlockCount.toLocaleString()}</div>
-                <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>Code Blocks Shared 💻</div>
+          {/* Hero Stats */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div style={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', padding: '32px 24px', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.2)', boxShadow: '0 8px 32px rgba(0,0,0,0.1)', textAlign: 'center' }}>
+              <div style={{ fontSize: '64px', fontWeight: '900', color: 'white', lineHeight: 1 }}>
+                {analytics.totalConversations.toLocaleString()}
               </div>
+              <div style={{ fontSize: '13px', color: '#e9d5ff', marginTop: '16px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.15em' }}>Conversations</div>
             </div>
-          )}
 
-          <div style={{ textAlign: 'center', marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <div style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '12px' }}>
-              {analytics.firstMessageDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - {analytics.lastMessageDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            <div style={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', padding: '32px 24px', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.2)', boxShadow: '0 8px 32px rgba(0,0,0,0.1)', textAlign: 'center' }}>
+              <div style={{ fontSize: '64px', fontWeight: '900', color: 'white', lineHeight: 1 }}>
+                {analytics.totalUserMessages.toLocaleString()}
+              </div>
+              <div style={{ fontSize: '13px', color: '#e9d5ff', marginTop: '16px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.15em' }}>Messages Sent</div>
             </div>
-            <div style={{ color: '#d8b4fe', fontSize: '14px', fontWeight: '600' }}>
+          </div>
+
+          {/* Day Streak - Full Width */}
+          <div style={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', padding: '32px', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ textAlign: 'center', flex: 1 }}>
+              <div style={{ fontSize: '64px', fontWeight: '900', color: 'white', lineHeight: 1 }}>{analytics.longestStreak.days}</div>
+              <div style={{ fontSize: '13px', color: '#e9d5ff', marginTop: '16px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.15em' }}>Day Streak</div>
+            </div>
+            <div style={{ fontSize: '60px', marginLeft: '20px' }}>🔥</div>
+          </div>
+
+          {/* Personality Highlight */}
+          <div style={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', padding: '40px', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.2)', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '13px', color: '#e9d5ff', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.2em' }}>You Are</div>
+              <div style={{ fontSize: '52px', fontWeight: '900', color: 'white', marginTop: '16px', lineHeight: 1.1 }}>
+                {analytics.personalityType}
+              </div>
+             
+            </div>
+          </div>
+
+          {/* Time Stats */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
+            <div style={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', padding: '28px 20px', borderRadius: '16px', textAlign: 'center', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
+              <div style={{ fontSize: '28px', fontWeight: '900', color: 'white', lineHeight: 1 }}>{analytics.mostActiveDay}</div>
+              <div style={{ fontSize: '11px', color: '#e9d5ff', marginTop: '12px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Peak Day</div>
+            </div>
+            <div style={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', padding: '28px 20px', borderRadius: '16px', textAlign: 'center', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
+              <div style={{ fontSize: '28px', fontWeight: '900', color: 'white', lineHeight: 1 }}>{analytics.mostActiveHour}:00</div>
+              <div style={{ fontSize: '11px', color: '#e9d5ff', marginTop: '12px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Power Hour</div>
+            </div>
+            <div style={{ background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', padding: '28px 20px', borderRadius: '16px', textAlign: 'center', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
+              <div style={{ fontSize: '28px', fontWeight: '900', color: 'white', lineHeight: 1 }}>{analytics.conversationDepth}</div>
+              <div style={{ fontSize: '11px', color: '#e9d5ff', marginTop: '12px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Avg Depth</div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div style={{ textAlign: 'center', paddingTop: '24px', borderTop: '1px solid rgba(255, 255, 255, 0.2)', marginTop: '8px' }}>
+            <div style={{ color: '#d8b4fe', fontSize: '16px', fontWeight: '600' }}>
               {analytics.responseTimePattern}
+            </div>
+            <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px', marginTop: '8px' }}>
+              {analytics.firstMessageDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - {analytics.lastMessageDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
             </div>
           </div>
         </div>
