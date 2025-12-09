@@ -385,7 +385,7 @@ export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
               margin: 0,
               letterSpacing: '-0.02em'
             }}>
-              GPT Wrap
+             GPTWrapped
             </h1>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '16px' }}>
               <div style={{ height: '1px', width: '48px', background: 'linear-gradient(to right, transparent, rgba(168, 85, 247, 0.6))' }}></div>
