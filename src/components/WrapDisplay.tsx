@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { WrapAnalytics } from '@/types';
-import ShareCard from './ShareCard';
 
 interface WrapDisplayProps {
   analytics: WrapAnalytics;
@@ -11,7 +10,6 @@ interface WrapDisplayProps {
 
 export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [showShareCard, setShowShareCard] = useState(false);
 
   const slides = [
     {
@@ -53,34 +51,15 @@ export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
           <p className="text-xl">You used ChatGPT for {analytics.longestStreak.days} days straight!</p>
           {analytics.longestStreak.days > 0 && (
             <>
-              <p className="text-sm text-purple-300">From {analytics.longestStreak.startDate}</p>
-              <p className="text-sm text-purple-300">To {analytics.longestStreak.endDate}</p>
+              <p className="text-sm text-purple-300">From {new Date(analytics.longestStreak.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+              <p className="text-sm text-purple-300">To {new Date(analytics.longestStreak.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
               <p className="mt-4">{analytics.longestStreak.days > 30 ? "Absolutely unstoppable 🚀" : "That's commitment!"}</p>
             </>
           )}
         </div>
       )
     },
-    {
-      title: `${analytics.productivityScore}/100`,
-      subtitle: 'Productivity Score',
-      content: (
-        <div className="text-white/70 space-y-3">
-          <div className="w-full bg-white/10 rounded-full h-4 overflow-hidden">
-            <div 
-              className="bg-gradient-to-r from-purple-500 to-pink-500 h-full transition-all duration-1000"
-              style={{ width: `${analytics.productivityScore}%` }}
-            />
-          </div>
-          <p className="text-lg">
-            {analytics.productivityScore > 80 ? "You're crushing it! 💪" : 
-             analytics.productivityScore > 50 ? "Solid work ethic 👍" : 
-             "Quality over quantity 🎯"}
-          </p>
-          <p className="text-sm text-purple-300">Based on activity, streaks, and engagement</p>
-        </div>
-      )
-    },
+
     {
       title: `${analytics.totalUserMessages.toLocaleString()}`,
       subtitle: 'Messages Sent',
@@ -243,18 +222,50 @@ export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
       subtitle: 'Thanks for using ChatGPT',
       content: (
         <div className="text-white/70 space-y-4">
-          <p className="text-lg">From {analytics.firstMessageDate?.toLocaleDateString()} to {analytics.lastMessageDate?.toLocaleDateString()}</p>
+          <p className="text-lg">From {analytics.firstMessageDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to {analytics.lastMessageDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
           <div className="bg-white/5 rounded-lg p-4 space-y-2 text-sm">
             <p>✨ {analytics.totalUserMessages.toLocaleString()} messages sent</p>
             <p>💬 {analytics.totalConversations} conversations</p>
             <p>🔥 {analytics.longestStreak.days} day streak</p>
-            <p>⚡ {analytics.productivityScore}/100 productivity</p>
             <p>🎯 {analytics.personalityType}</p>
           </div>
           <div className="flex gap-3 mt-6 justify-center">
             <button
-              onClick={() => setShowShareCard(true)}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-full font-bold hover:from-purple-500 hover:to-pink-500 transition"
+              onClick={async () => {
+                try {
+                  const html2canvas = (await import('html2canvas')).default;
+                  const card = document.getElementById('share-card-hidden');
+                  if (!card) return;
+                  
+                  // Clone the card to avoid modifying the original
+                  const clone = card.cloneNode(true) as HTMLElement;
+                  clone.style.display = 'block';
+                  clone.style.position = 'fixed';
+                  clone.style.left = '0';
+                  clone.style.top = '0';
+                  clone.style.zIndex = '-1';
+                  document.body.appendChild(clone);
+                  
+                  // Wait for fonts and styles to load
+                  await new Promise(resolve => setTimeout(resolve, 100));
+                  
+                  const canvas = await html2canvas(clone, {
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true,
+                  });
+                  
+                  document.body.removeChild(clone);
+                  
+                  const link = document.createElement('a');
+                  link.download = `gpt-rewind-2025.png`;
+                  link.href = canvas.toDataURL('image/png');
+                  link.click();
+                } catch (error) {
+                  console.error('Failed to generate image:', error);
+                }
+              }}
+              className="bg-linear-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-full font-bold hover:from-purple-500 hover:to-pink-500 transition"
             >
               📸 Download Wrap
             </button>
@@ -284,28 +295,11 @@ export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
 
   const slide = slides[currentSlide];
 
-  if (showShareCard) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-black to-black p-4">
-        <div className="max-w-4xl w-full">
-          <ShareCard analytics={analytics} onDownload={() => {}} />
-          <div className="text-center mt-6">
-            <button
-              onClick={() => setShowShareCard(false)}
-              className="text-white/60 hover:text-white transition"
-            >
-              ← Back to slides
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-black to-black p-4">
+    <>
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-purple-900 via-black to-black p-4">
       <div className="max-w-2xl w-full">
-        <div className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-lg rounded-3xl p-12 border border-white/10 min-h-[500px] flex flex-col justify-between">
+        <div className="bg-linear-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-lg rounded-3xl p-12 border border-white/10 min-h-[500px] flex flex-col justify-between">
           <div className="text-center space-y-6">
             <h2 className="text-7xl font-bold text-white mb-4 animate-fade-in">
               {slide.title}
@@ -353,5 +347,97 @@ export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
         </div>
       </div>
     </div>
+
+    {/* Hidden share card for download */}
+    <div id="share-card-hidden" style={{ display: 'none', position: 'absolute', left: '-9999px', top: '0' }}>
+      <div 
+        style={{ width: '1200px', minHeight: '1600px', background: 'linear-gradient(to bottom right, #581c87, #000000, #000000)', padding: '48px', borderRadius: '24px', border: '1px solid rgba(168, 85, 247, 0.3)' }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', color: 'white' }}>
+          <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h1 style={{ fontSize: '72px', fontWeight: 'bold', background: 'linear-gradient(to right, #c084fc, #f9a8d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
+              GPT Rewind 2025
+            </h1>
+            <p style={{ fontSize: '24px', color: '#d8b4fe', margin: 0 }}>My ChatGPT Year Wrapped</p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '48px' }}>
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#c084fc' }}>{analytics.totalConversations.toLocaleString()}</div>
+              <div style={{ fontSize: '18px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '8px' }}>Conversations</div>
+            </div>
+
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#f9a8d4' }}>{analytics.totalUserMessages.toLocaleString()}</div>
+              <div style={{ fontSize: '18px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '8px' }}>Messages Sent</div>
+            </div>
+
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#c084fc' }}>{analytics.longestStreak.days} 🔥</div>
+              <div style={{ fontSize: '18px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '8px' }}>Day Streak</div>
+            </div>
+
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#f9a8d4' }}>{analytics.conversationDepth}</div>
+              <div style={{ fontSize: '18px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '8px' }}>Avg Depth</div>
+            </div>
+          </div>
+
+          <div style={{ background: 'rgba(147, 51, 234, 0.2)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)', marginTop: '32px' }}>
+            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ fontSize: '24px', color: 'rgba(255, 255, 255, 0.7)' }}>I&apos;m a</div>
+              <div style={{ fontSize: '48px', fontWeight: 'bold', color: 'white' }}>{analytics.personalityType}</div>
+              <div style={{ fontSize: '20px', color: '#d8b4fe', marginTop: '16px' }}>{analytics.dominantTheme}</div>
+            </div>
+          </div>
+
+          <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'white', marginBottom: '16px' }}>Top Topics</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {analytics.topTopics.slice(0, 5).map((topic, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '18px', color: 'rgba(255, 255, 255, 0.9)' }}>#{i + 1} {topic.topic}</span>
+                  <span style={{ color: '#c084fc', fontWeight: '600' }}>{topic.count}x</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#c084fc' }}>{analytics.mostActiveDay}</div>
+              <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>Peak Day</div>
+            </div>
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f9a8d4' }}>{analytics.mostActiveHour}:00</div>
+              <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>Power Hour</div>
+            </div>
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#c084fc' }}>{analytics.questionToStatementRatio}%</div>
+              <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)' }}>Questions</div>
+            </div>
+          </div>
+
+          {analytics.codeBlockCount > 0 && (
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '40px', fontWeight: 'bold', color: '#c084fc' }}>{analytics.codeBlockCount.toLocaleString()}</div>
+                <div style={{ fontSize: '18px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '8px' }}>Code Blocks Shared 💻</div>
+              </div>
+            </div>
+          )}
+
+          <div style={{ textAlign: 'center', marginTop: '48px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '14px' }}>
+              {analytics.firstMessageDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - {analytics.lastMessageDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </div>
+            <div style={{ color: '#d8b4fe', fontSize: '18px', fontWeight: '600' }}>
+              {analytics.responseTimePattern}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </>
   );
 }

@@ -205,7 +205,7 @@ export const analyzeConversations = (conversations: Conversation[]): WrapAnalyti
     if (conv.create_time) {
       topConvs.push({
         title: conv.title,
-        date: new Date(conv.create_time * 1000).toLocaleDateString()
+        date: new Date(conv.create_time * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
       });
     }
   });

@@ -17,11 +17,7 @@ export default function ShareCard({ analytics, onDownload }: ShareCardProps) {
     try {
       const html2canvas = (await import('html2canvas')).default;
       const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: '#000000',
-        scale: 2,
         logging: false,
-        windowWidth: 1200,
-        windowHeight: 1600,
       });
 
       const link = document.createElement('a');
@@ -37,13 +33,13 @@ export default function ShareCard({ analytics, onDownload }: ShareCardProps) {
     <div className="space-y-6">
       <div 
         ref={cardRef} 
-        className="bg-gradient-to-br from-purple-900 via-black to-black p-12 rounded-3xl border border-purple-500/30"
+        className="bg-linear-to-br from-purple-900 via-black to-black p-12 rounded-3xl border border-purple-500/30"
         style={{ width: '1200px', minHeight: '1600px' }}
       >
         <div className="space-y-8 text-white">
           {/* Header */}
           <div className="text-center space-y-4">
-            <h1 className="text-7xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h1 className="text-7xl font-bold bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               GPT Rewind 2025
             </h1>
             <p className="text-2xl text-purple-300">My ChatGPT Year Wrapped</p>
@@ -77,7 +73,7 @@ export default function ShareCard({ analytics, onDownload }: ShareCardProps) {
           </div>
 
           {/* Personality Section */}
-          <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 p-8 rounded-2xl border border-white/10 mt-8">
+          <div className="bg-linear-to-r from-purple-600/20 to-pink-600/20 p-8 rounded-2xl border border-white/10 mt-8">
             <div className="text-center space-y-3">
               <div className="text-2xl text-white/70">I&apos;m a</div>
               <div className="text-5xl font-bold text-white">{analytics.personalityType}</div>
@@ -140,7 +136,7 @@ export default function ShareCard({ analytics, onDownload }: ShareCardProps) {
       <div className="text-center space-y-4">
         <button
           onClick={downloadImage}
-          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-4 px-12 rounded-full transition-all transform hover:scale-105 text-lg"
+          className="bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-4 px-12 rounded-full transition-all transform hover:scale-105 text-lg"
         >
           📸 Download as Image
         </button>
