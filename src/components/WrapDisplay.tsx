@@ -226,7 +226,7 @@ export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
     },
     {
       title: '2025 Was Your Year',
-      subtitle: 'Thanks for using ChatGPT',
+      subtitle: 'Year of Prompting!',
       content: (
         <div className="text-white/70 space-y-2 sm:space-y-3">
           <p className="text-xs sm:text-sm md:text-base">From {analytics.firstMessageDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to {analytics.lastMessageDate?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
