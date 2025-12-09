@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { WrapAnalytics } from '@/types';
+import ShareCard from './ShareCard';
 
 interface WrapDisplayProps {
   analytics: WrapAnalytics;
@@ -10,6 +11,7 @@ interface WrapDisplayProps {
 
 export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showShareCard, setShowShareCard] = useState(false);
 
   const slides = [
     {
@@ -249,12 +251,20 @@ export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
             <p>⚡ {analytics.productivityScore}/100 productivity</p>
             <p>🎯 {analytics.personalityType}</p>
           </div>
-          <button
-            onClick={onReset}
-            className="mt-6 bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-white/90 transition"
-          >
-            Start Over
-          </button>
+          <div className="flex gap-3 mt-6 justify-center">
+            <button
+              onClick={() => setShowShareCard(true)}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-full font-bold hover:from-purple-500 hover:to-pink-500 transition"
+            >
+              📸 Download Wrap
+            </button>
+            <button
+              onClick={onReset}
+              className="bg-white/10 text-white px-6 py-3 rounded-full font-bold hover:bg-white/20 transition border border-white/20"
+            >
+              Start Over
+            </button>
+          </div>
         </div>
       )
     }
@@ -273,6 +283,24 @@ export default function WrapDisplay({ analytics, onReset }: WrapDisplayProps) {
   };
 
   const slide = slides[currentSlide];
+
+  if (showShareCard) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-black to-black p-4">
+        <div className="max-w-4xl w-full">
+          <ShareCard analytics={analytics} onDownload={() => {}} />
+          <div className="text-center mt-6">
+            <button
+              onClick={() => setShowShareCard(false)}
+              className="text-white/60 hover:text-white transition"
+            >
+              ← Back to slides
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-black to-black p-4">
