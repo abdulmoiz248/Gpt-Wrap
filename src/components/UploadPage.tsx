@@ -36,20 +36,20 @@ export default function UploadPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-black to-black p-4">
-      <div className="max-w-md w-full space-y-8 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-primary p-4 sm:p-6 md:p-8">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8 text-center">
         <div>
-          <h1 className="text-6xl font-bold text-white mb-2">
-            GPT Rewind
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-2">
+            GPTWrapped
           </h1>
-          <p className="text-xl text-purple-300">
+          <p className="text-base sm:text-lg md:text-xl text-[#b84fce]">
             Your 2025 ChatGPT Year Wrapped
           </p>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
-          <div className="space-y-6">
-            <div className="text-white/80 text-sm space-y-2">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-[#d4acfb]/20">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="text-white/80 text-xs sm:text-sm space-y-2">
               <p>📊 Upload your ChatGPT conversations.json</p>
               <p className="text-xs">
                 Get it from: ChatGPT Settings → Data Controls → Export Data
@@ -57,8 +57,8 @@ export default function UploadPage() {
             </div>
 
             <label className="block">
-              <div className="cursor-pointer bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105">
-                {loading ? 'Analyzing...' : 'Upload JSON'}
+              <div className="cursor-pointer bg-gradient-secondary text-black hover:text-white font-semibold sm:font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full transition-all transform hover:scale-105 text-sm sm:text-base">
+                {loading ? 'Creating...' : 'Upload JSON'}
               </div>
               <input
                 type="file"
@@ -70,14 +70,14 @@ export default function UploadPage() {
             </label>
 
             {error && (
-              <div className="text-red-400 text-sm bg-red-500/10 p-3 rounded-lg">
+              <div className="text-red-400 text-xs sm:text-sm bg-red-500/10 p-2.5 sm:p-3 rounded-lg">
                 {error}
               </div>
             )}
           </div>
         </div>
 
-        <div className="text-white/60 text-xs">
+        <div className="text-white/60 text-xs sm:text-sm">
           All processing happens in your browser. Your data never leaves your device.
         </div>
       </div>
