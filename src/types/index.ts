@@ -65,4 +65,23 @@ export interface WrapAnalytics {
   hourlyActivity: number[];
   avgResponseLength: number;
   topConversations: Array<{ title: string; date: string }>;
+  
+  // Advanced metrics
+  longestStreak: { days: number; startDate: string; endDate: string };
+  averageSessionLength: number;
+  totalTimeSpent: number;
+  busiestWeek: { week: string; count: number };
+  messagingPace: number;
+  weekendVsWeekday: { weekend: number; weekday: number };
+  productivityScore: number;
+  conversationDepth: number;
+  topEmojis: Array<{ emoji: string; count: number }>;
+  questionToStatementRatio: number;
+  codeBlockCount: number;
+  mostProductiveHours: number[];
+  avgConversationLifespan: number;
+  multiDayConversations: number;
+  personalityType: string;
+  dominantTheme: string;
+  responseTimePattern: string;
 }
